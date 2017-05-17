@@ -2,7 +2,6 @@ import copy
 import sys
 
 PLAYER1, PLAYER2, EMPTY, BLOCKED = [0, 1, 2, 3]
-
 S_PLAYER1, S_PLAYER2, S_EMPTY, S_BLOCKED, = ['0', '1', '.', 'x']
 
 CHARTABLE = [(PLAYER1, S_PLAYER1), (PLAYER2, S_PLAYER2), (EMPTY, S_EMPTY), (BLOCKED, S_BLOCKED)]
@@ -56,8 +55,9 @@ class Board:
     def in_bounds (self, row, col):
         return row >= 0 and col >= 0 and col < self.width and row < self.height
 
-    def is_legal(self, row, col):
-        return (self.in_bounds(row, col)) and (not BLOCKED in self.cell[row][col])
+    def is_legal(self, row, col, my_id):
+        enemy_id = my_id ^ 1
+        return (self.in_bounds(row, col)) and (not BLOCKED in self.cell[row][col]) and (not enemy_id in self.cell[row][col])
 
     def is_legal_tuple(self, loc):
         row, col = loc
@@ -77,7 +77,7 @@ class Board:
         for ((o_row, o_col), order) in DIRS:
             t_row = my_player.row + o_row
             t_col = my_player.col + o_col
-            if self.is_legal(t_row, t_col):
+            if self.is_legal(t_row, t_col, my_id):
                 result.append(((o_row, o_col), order))
             else:
                 pass
